@@ -21,6 +21,12 @@ class BigInt {
 	friend BigInt operator++(BigInt& a);
 	friend BigInt operator--(BigInt& a);
 	
+	
+	friend BigInt operator+(BigInt& a, BigInt& b);
+	friend BigInt operator-(const BigInt& a, const BigInt& b);
+	friend BigInt operator/(const BigInt& a, const BigInt& b);
+	friend BigInt operator*(const BigInt& a, const BigInt& b);
+	
 	friend BigInt& operator-(BigInt& a){
 		a.isNegative = true;
 		return a;
@@ -74,10 +80,6 @@ class BigInt {
 
 
 
-BigInt operator+(const BigInt& a, const BigInt& b);
-BigInt operator-(const BigInt& a, const BigInt& b);
-BigInt operator/(const BigInt& a, const BigInt& b);
-BigInt operator*(const BigInt& a, const BigInt& b);
 
 BigInt operator+=(const BigInt& a, const BigInt& b);
 BigInt operator-=(const BigInt& a, const BigInt& b);

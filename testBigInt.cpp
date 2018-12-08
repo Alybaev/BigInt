@@ -314,3 +314,103 @@ TEST_CASE("prefix" ,"[prefix]"){
 	
 	
 }
+TEST_CASE("Arithmetic Operations","[arithmetic]"){
+	BigInt a,b,c;
+	ostringstream sout;
+	SECTION("Addition"){
+		SECTION("Case 1"){
+			a = BigInt(2200);
+			b = BigInt(20);
+			c = BigInt(2220);
+			sout << a + b;
+			REQUIRE(sout.str() == c);
+		}
+		SECTION("Case 2"){
+			a = BigInt(256);
+			b = BigInt(256);
+			c = BigInt(512);
+			sout << a + b;
+			REQUIRE(sout.str() == c);
+		}
+		SECTION("Case 3"){
+			a = BigInt(1);
+			b = BigInt("256");
+			c = BigInt(257);
+			sout << a + b;
+			REQUIRE(sout.str() == c);
+		}
+		SECTION("Case 4"){
+			a = BigInt(1);
+			b = BigInt("9");
+			c = BigInt(10);
+			sout << a + b;
+			REQUIRE(sout.str() == c);
+		}
+		
+		SECTION("Case 5"){
+			a = BigInt(1);
+			b = BigInt("9");
+			c = BigInt(10);
+			sout << a + b;
+			REQUIRE(sout.str() == c);
+		}
+		SECTION("Case 6"){
+			a = BigInt("10000000000000000000000009");
+			b = BigInt("10000000000000000000000009");
+			c = BigInt("20000000000000000000000018");
+			sout << a + b;
+			REQUIRE(sout.str() == c);
+		}
+		SECTION("Case 7"){
+			a = BigInt(999);
+			b = BigInt("999");
+			c = BigInt(1998);
+			sout << a + b;
+			REQUIRE(sout.str() == c);
+		}
+		SECTION("Case 8"){
+			a = BigInt(3392);
+			b = BigInt("38");
+			c = BigInt(3430);
+			sout << a + b;
+			REQUIRE(sout.str() == c);
+		}
+		SECTION("Case 9"){
+			a = BigInt(15555);
+			b = BigInt(5555);
+			c = BigInt(21110);
+			sout << a + b;
+			REQUIRE(sout.str() == c);
+		}
+		SECTION("Case 10"){
+			a = BigInt(222);
+			b = BigInt(222);
+			c = BigInt(444);
+			sout << a + b;
+			REQUIRE(sout.str() == c);
+		}
+		SECTION("Case 11"){
+			a = BigInt(1);
+			b = BigInt(1);
+			c = BigInt(2);
+			sout << a + b;
+			REQUIRE(sout.str() == c);
+		}
+		SECTION("Case 12"){
+			a = BigInt(11111);
+			b = BigInt(22);
+			c = BigInt(11133);
+			sout << a + b;
+			REQUIRE(sout.str() == c);
+		}
+		SECTION("Case 12"){
+			a = BigInt();
+			b = BigInt();
+			c = BigInt();
+			sout << a + b;
+			REQUIRE(sout.str() == c);
+		}
+	}
+	
+	
+}

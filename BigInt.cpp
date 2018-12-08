@@ -4,6 +4,7 @@
 #include <sstream>
 #include <vector>
 #include <algorithm>
+#include <cmath>
 #include "BigInt.h"
 using namespace std;
 
@@ -22,7 +23,7 @@ using namespace std;
 	} else {
 		throw runtime_error("BigInt: incorrect string initializer");
 	}
-	eraseLeadingZeros();
+
 
 	while (sinp.get(ch)){
 		if (not isdigit(ch)) {
@@ -107,6 +108,63 @@ BigInt operator++(BigInt& a){
 	
 	
 }
+
+
+BigInt operator+(BigInt& a, BigInt& b){
+	string res = "";
+	vector<int> bigMax = a.digits;;
+	vector<int> bigMin = b.digits;;
+	long long maxSize = max(a.size(),b.size());
+	long long minSize = min(a.size(),b.size());
+	long long diffInSize = maxSize -  minSize;
+	if(b.size() == maxSize){
+		bigMax = b.digits;
+		bigMin = a.digits;
+	}
+	int i = maxSize - 1;
+	int j = minSize;
+	if(maxSize != minSize){
+		bigMin.insert(bigMin.begin(),0);
+	}else{
+		j = minSize - 1;
+		diffInSize++;
+	}
+	bool carry = false;
+	int sum = 0;
+	
+	
+	while(i >= diffInSize - 1){
+		
+		
+		sum = bigMax[i] + bigMin[j];
+	
+		if(carry){
+			++sum;
+		}
+		if(sum >= 10){
+			res = to_string(sum % 10) + res;
+			carry = true;
+		}else{
+			res = to_string(sum) + res;
+			carry = false;
+		}
+		i--;
+		j--;
+		
+	}
+	if(carry && maxSize == minSize){
+		res =  "1" +  res;
+	}else{
+		for(int i = diffInSize - 2;i >= 0;i--){
+			
+			res =  to_string(bigMax[i])+  res;
+			
+		}
+	}
+	return BigInt(res);
+	
+}
+
 BigInt operator--(BigInt& a){
 	if((a.isNegative)or(a.size() == 1 && a.digits[0] == 0)){
 		a.isNegative = false;
