@@ -8,6 +8,8 @@
 #include "BigInt.h"
 using namespace std;
 
+BigInt subtract(BigInt& a, BigInt& b,bool& isNegative);
+BigInt add(vector<int>& a, vector<int>& b,bool& isNegative);
  BigInt::BigInt(const string& s)
 	:isNegative(false) 
 	{
@@ -23,13 +25,16 @@ using namespace std;
 	} else {
 		throw runtime_error("BigInt: incorrect string initializer");
 	}
-
+	
 
 	while (sinp.get(ch)){
 		if (not isdigit(ch)) {
 			throw runtime_error("BigInt: incorrect string initializer");
 		}
 		digits.push_back(ch - '0');
+	}
+	if(digits.size() > 1){
+		eraseLeadingZeros();
 	}
 }
 
@@ -44,12 +49,12 @@ ostream& operator<<(ostream& out, const BigInt& x){
 	return out;
 }
 void BigInt::eraseLeadingZeros(){
-	int i = 0;
-	while(i < digits.size() and digits[i] == 0)
-	{
-		i++;
+
+	while(digits.size() != 1 and digits[0] == 0)
+	{	
+		digits.erase(digits.begin());
 	}
-	digits.erase(digits.begin(), digits.begin() + i);
+	
 }
 
 istream& operator>>(istream& inp, BigInt& x){
@@ -109,24 +114,94 @@ BigInt operator++(BigInt& a){
 	
 }
 
-
-BigInt operator+(BigInt& a, BigInt& b){
+BigInt operator-(BigInt& a, BigInt& b){
+	
+	bool isNegative = false;
+	if(a.isNegative and b.isNegative){
+		b.isNegative = false;
+		a.isNegative = false;
+		return b - a;
+	}else if(a.isNegative and !b.isNegative){
+		b.isNegative = true;
+		return a + b;
+	}else if(!a.isNegative and b.isNegative){
+		b.isNegative = false;
+		return b + a;
+	}
+	
+	if(abs(a) < abs(b)){
+		isNegative = true;
+		vector<int> t;
+		t = a.digits;
+		a.digits = b.digits;
+		b.digits = t;
+	}
+	
+	return subtract(a,b,isNegative);
+	
+	
+}
+BigInt subtract(BigInt& a, BigInt& b,bool& isNegative){
 	string res = "";
-	vector<int> bigMax = a.digits;;
-	vector<int> bigMin = b.digits;;
+	BigInt c;
+	int diffSize = a.size() - b.size();
+	for(int i = a.size() - 1,j = b.size() - 1; i >= diffSize;i--,j--){
+		if(a.digits[i] - b.digits[j] < 0){
+			a.digits[i] += 10;
+			int k = i;
+			while(a.digits[k - 1] == 0){
+				a.digits[k - 1] = 9;
+				k--;
+			}
+			a.digits[k - 1]--;
+		}
+		int sub = a.digits[i] - b.digits[j];
+		res = to_string(sub) + res;
+	}
+	for(int i = diffSize-1;i >= 0;i--){
+		res = to_string(a.digits[i]) + res;
+	}
+	c = BigInt(res);
+	c.isNegative = isNegative;
+	return c;
+}
+BigInt operator+(BigInt& a, BigInt& b){
+	bool isNegative;
+	
+	if(a.isNegative && !b.isNegative){
+		a.isNegative = false;
+		return b - a;
+	}else if(b.isNegative && !a.isNegative){
+		b.isNegative = false;
+		return a - b;
+	}else if(b.isNegative && a.isNegative){
+		isNegative = true;
+	}
+	vector<int> bigMax = a.digits;
+	vector<int> bigMin = b.digits;
+	
 	long long maxSize = max(a.size(),b.size());
 	long long minSize = min(a.size(),b.size());
-	long long diffInSize = maxSize -  minSize;
+	
+	
 	if(b.size() == maxSize){
 		bigMax = b.digits;
 		bigMin = a.digits;
 	}
-	int i = maxSize - 1;
-	int j = minSize;
-	if(maxSize != minSize){
+	
+	
+	return add(bigMax,bigMin,isNegative);
+	
+}
+BigInt add(vector<int>& bigMax, vector<int>& bigMin,bool& isNegative){
+	long long diffInSize = bigMax.size() -  bigMin.size();
+	string res = "";
+	int i = bigMax.size() - 1;
+	int j = bigMin.size();
+	if(bigMax.size() !=  bigMin.size()){
 		bigMin.insert(bigMin.begin(),0);
 	}else{
-		j = minSize - 1;
+		j = bigMin.size() - 1;
 		diffInSize++;
 	}
 	bool carry = false;
@@ -152,7 +227,7 @@ BigInt operator+(BigInt& a, BigInt& b){
 		j--;
 		
 	}
-	if(carry && maxSize == minSize){
+	if(carry && bigMax.size() == bigMin.size()){
 		res =  "1" +  res;
 	}else{
 		for(int i = diffInSize - 2;i >= 0;i--){
@@ -161,10 +236,12 @@ BigInt operator+(BigInt& a, BigInt& b){
 			
 		}
 	}
-	return BigInt(res);
+	BigInt c = BigInt(res);
+	c.isNegative = isNegative;
+	return c;
+	
 	
 }
-
 BigInt operator--(BigInt& a){
 	if((a.isNegative)or(a.size() == 1 && a.digits[0] == 0)){
 		a.isNegative = false;

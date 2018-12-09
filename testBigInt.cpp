@@ -403,11 +403,118 @@ TEST_CASE("Arithmetic Operations","[arithmetic]"){
 			sout << a + b;
 			REQUIRE(sout.str() == c);
 		}
-		SECTION("Case 12"){
+		SECTION("Case 13"){
 			a = BigInt();
 			b = BigInt();
 			c = BigInt();
 			sout << a + b;
+			REQUIRE(sout.str() == c);
+		}
+		SECTION("Case 14"){
+			a = BigInt(15);
+			b = BigInt(-20);
+			c = BigInt(-5);
+			sout << a + b;
+			REQUIRE(sout.str() == c);
+		}
+		SECTION("Case 14"){
+			a = BigInt("-55");
+			b = BigInt(100);
+			c = BigInt(45);
+			sout << a + b;
+			REQUIRE(sout.str() == c);
+		}
+		SECTION("Case 15"){
+			a = BigInt("-55");
+			b = BigInt("-100");
+			c = BigInt(-155);
+			sout << a + b;
+			REQUIRE(sout.str() == c);
+		}
+		SECTION("Case 16"){
+			a = BigInt("100");
+			b = BigInt("-100");
+			c = BigInt();
+			sout << a + b;
+			REQUIRE(sout.str() == c);
+		}
+	}
+	SECTION("subtraction"){
+		SECTION("Case 1"){
+			a = BigInt(5);
+			b = BigInt(1);
+			c = BigInt(4);
+			sout << a - b;
+			REQUIRE(sout.str() == c);
+		}
+		SECTION("Case 2"){
+			a = BigInt("12");
+			b = BigInt(3);
+			c = BigInt(9);
+			sout << a - b;
+			REQUIRE(sout.str() == c);
+		}
+		SECTION("Case 3"){
+			a = BigInt("23");
+			b = BigInt(122);
+			c = BigInt(-99);
+			sout << a - b;
+			REQUIRE(sout.str() == c);
+		}
+		SECTION("Case 4"){
+			a = BigInt("23");
+			b = BigInt(23);
+			c = BigInt(0);
+			sout << a - b;
+			REQUIRE(sout.str() == c);
+		}
+		SECTION("Case 5"){
+			a = BigInt("1000");
+			b = BigInt(1);
+			c = BigInt(999);
+			sout << a - b;
+			REQUIRE(sout.str() == c);
+		}
+		SECTION("Case 6"){
+			a = BigInt("1000");
+			b = BigInt(1000);
+			c = BigInt();
+			sout << a - b;
+			REQUIRE(sout.str() == c);
+		}
+		SECTION("Case 7"){
+			a = BigInt("8888888888888888888888");
+			b = BigInt("4444444444444444944144");
+			c = BigInt("4444444444444443944744");
+			sout << a - b;
+			REQUIRE(sout.str() == c);
+		}
+		SECTION("Case 8"){
+			a = BigInt("-3");
+			b = BigInt("-6");
+			c = BigInt("3");
+			sout << a - b;
+			REQUIRE(sout.str() == c);
+		}
+		SECTION("Case 9"){
+			a = BigInt("1000");
+			b = BigInt("-999");
+			c = BigInt("1999");
+			sout << a - b;
+			REQUIRE(sout.str() == c);
+		}
+		SECTION("Case 10"){
+			a = BigInt("-1000");
+			b = BigInt("-999");
+			c = BigInt("-1");
+			sout << a - b;
+			REQUIRE(sout.str() == c);
+		}
+		SECTION("Case 11"){
+			a = BigInt("-1001");
+			b = BigInt("3002");
+			c = BigInt("-4003");
+			sout << a - b;
 			REQUIRE(sout.str() == c);
 		}
 	}
