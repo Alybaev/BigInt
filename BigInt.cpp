@@ -10,7 +10,7 @@ using namespace std;
 
 BigInt subtract(BigInt& a, BigInt& b,bool& isNegative);
 BigInt add(vector<int>& a, vector<int>& b,bool& isNegative);
- BigInt::BigInt(const string& s)
+BigInt::BigInt(const string& s)
 	:isNegative(false) 
 	{
 	
@@ -84,38 +84,35 @@ istream& operator>>(istream& inp, BigInt& x){
 }
 
 //prefix
-BigInt operator++(BigInt& a){
-	if(a.isNegative){
-		
-		a.isNegative = false;
-		--a;
-		if(a.size() != 1 || a.digits[0] != 0){
-			a.isNegative = true;
-		}
-		return a;
-	}
-	if(a.digits[a.size() - 1] == 9){
-		if(equal(a.digits.begin() + 1, a.digits.end(), a.digits.begin())){
-			a.digits.insert(a.digits.begin(), 0);
-		}
-		int i = a.size() - 1;
-		while(a.digits[i] == 9){
-			a.digits[i] = 0;
-			i--;
-		}
-		++a.digits[i];
-		
-		return a;
-		
-	}
-	++a.digits[a.size() - 1];
-	return a;
+BigInt& BigInt::operator++(){
+	 BigInt b = BigInt(1);	
+	 *this = *this + b;
+	 return *this;
+ }
+BigInt& BigInt::operator--(){
+	 BigInt b = BigInt(1);	
+	 *this = *this - b;
+	 return *this;
+ }
+ const BigInt BigInt::operator++(int){
+	BigInt t = *this;
+	BigInt b = BigInt(1);
+	*this = *this + b;
+	return t;
 	
 	
 }
-
-BigInt operator-(BigInt& a, BigInt& b){
-	
+ const  BigInt BigInt::operator--(int){
+	BigInt t = *this;
+	BigInt b = BigInt(1);
+	*this = *this - b;
+	return t;
+		
+		
+}
+BigInt operator-(const BigInt& num1,const BigInt& num2){
+	BigInt a = num1;
+	BigInt b = num2;
 	bool isNegative = false;
 	if(a.isNegative and b.isNegative){
 		b.isNegative = false;
@@ -165,9 +162,10 @@ BigInt subtract(BigInt& a, BigInt& b,bool& isNegative){
 	c.isNegative = isNegative;
 	return c;
 }
-BigInt operator+(BigInt& a, BigInt& b){
+BigInt operator+(const BigInt& num1, const BigInt& num2){
 	bool isNegative;
-	
+	BigInt a = num1;
+	BigInt b = num2;	
 	if(a.isNegative && !b.isNegative){
 		a.isNegative = false;
 		return b - a;
@@ -227,9 +225,13 @@ BigInt add(vector<int>& bigMax, vector<int>& bigMin,bool& isNegative){
 		j--;
 		
 	}
+
 	if(carry && bigMax.size() == bigMin.size()){
 		res =  "1" +  res;
 	}else{
+		if(carry){
+			++bigMax[0];
+		}
 		for(int i = diffInSize - 2;i >= 0;i--){
 			
 			res =  to_string(bigMax[i])+  res;
@@ -242,39 +244,7 @@ BigInt add(vector<int>& bigMax, vector<int>& bigMin,bool& isNegative){
 	
 	
 }
-BigInt operator--(BigInt& a){
-	if((a.isNegative)or(a.size() == 1 && a.digits[0] == 0)){
-		a.isNegative = false;
-		++a;
-		a.isNegative = true;
-		return a;
-	}
-	if(a.digits[a.size() - 1] == 0){
-		
-		if(a.size() != 1 && a.digits.front() == 1){
-			
-			a.digits.erase(a.digits.begin());
-			if(equal(a.digits.begin() + 1, a.digits.end(), a.digits.begin()) && a.digits.front() == 0){
-				return BigInt(string(a.digits.size(),'9'));
-			}
-			a.digits.insert(a.digits.begin(),1);
-					
-		}	
-		int i = a.size() - 1;
-		while(a.digits[i] == 0){
-			a.digits[i] = 9;
-			i--;
-		}
-		--a.digits[i];
-		return a;
-		
-	}
-	
-	--a.digits[a.size() - 1];
-	return a;
-	
-	
-}
+
 // comparison operators
 bool operator==(const BigInt& a, const BigInt& b){
 	if((a.isNegative and b.isNegative) or (!(a.isNegative) and !(b.isNegative))){

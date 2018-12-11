@@ -18,25 +18,25 @@ class BigInt {
 	friend bool operator<(const BigInt& a, const BigInt& b);
 	friend bool operator>=(const BigInt& a, const BigInt& b);
 	friend bool operator<=(const BigInt& a, const BigInt& b);
-	friend BigInt operator++(BigInt& a);
-	friend BigInt operator--(BigInt& a);
 	
 	
-	friend BigInt operator+(BigInt& a, BigInt& b);
-	friend BigInt operator-(BigInt& a, BigInt& b);
+	
+	friend BigInt operator+(const BigInt& a,const BigInt& b);
+	friend BigInt operator-(const BigInt& a, const BigInt& b);
 	friend BigInt subtract(BigInt& a, BigInt& b,bool& isNegative);
 	friend BigInt add(std::vector<int>& a, std::vector<int>& b,bool& isNegative);
 	friend BigInt operator/(const BigInt& a, const BigInt& b);
 	friend BigInt operator*(const BigInt& a, const BigInt& b);
 	
 	friend BigInt& operator-(BigInt& a){
-		a.isNegative = true;
+		a.isNegative = not a.isNegative;
 		return a;
 	}
 	
-	friend BigInt& operator+(BigInt& a){
+	friend BigInt& operator+(BigInt& a) {
 		return a;
 	}
+	
 	friend BigInt abs(BigInt x){
 		x.isNegative = false;
 		return x;
@@ -48,11 +48,15 @@ class BigInt {
 		digits.push_back(0);
 	}
 
-	BigInt(const std::string& s);
+	explicit BigInt(const std::string& s);
 	
+	const  BigInt operator++(int);
+	const  BigInt operator--(int);
+	BigInt& operator++();
+	BigInt& operator--();
 
    
-	explicit BigInt(const int& x) 
+	BigInt(const int& x) 
 	:isNegative(false) {
 		std::string xStr = std::to_string(x);
 		if(xStr[0] == '-'){
@@ -68,6 +72,7 @@ class BigInt {
 	
 	void eraseLeadingZeros();
 	private:
+	
 	int size() const{
 		return digits.size();
 	}
