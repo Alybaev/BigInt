@@ -277,8 +277,13 @@ TEST_CASE("Arithmetic Operations","[arithmetic]"){
 		SECTION("Case 1"){
 			a = BigInt(2200);
 			b = BigInt(20);
-			c = BigInt(2220);
+			a += 10;
+			c = BigInt(2230);
 			sout << a + b;
+			REQUIRE(a + b == c);
+			c += b;
+			b += b;
+			
 			REQUIRE(a + b == c);
 		}
 		SECTION("Case 2"){

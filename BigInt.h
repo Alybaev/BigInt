@@ -18,9 +18,10 @@ class BigInt {
 	friend bool operator<(const BigInt& a, const BigInt& b);
 	friend bool operator>=(const BigInt& a, const BigInt& b);
 	friend bool operator<=(const BigInt& a, const BigInt& b);
+
 	
 	
-	
+	friend BigInt operator-=(const BigInt& a, const BigInt& b);
 	friend BigInt operator+(const BigInt& a,const BigInt& b);
 	friend BigInt operator-(const BigInt& a, const BigInt& b);
 	friend BigInt subtract(BigInt& a, BigInt& b,bool& isNegative);
@@ -37,12 +38,13 @@ class BigInt {
 		return a;
 	}
 	
-	friend BigInt abs(BigInt x){
-		x.isNegative = false;
-		return x;
-	}
-	public:
 	
+	
+	public:
+	BigInt& operator+=(const BigInt& b){
+		*this = *this + b;
+		return *this;
+	}
 	BigInt()
 	:isNegative(false) {
 		digits.push_back(0);
@@ -54,7 +56,10 @@ class BigInt {
 	const  BigInt operator--(int);
 	BigInt& operator++();
 	BigInt& operator--();
-
+	friend BigInt abs(BigInt x){
+		x.isNegative = false;
+		return x;
+	}
    
 	BigInt(const int& x) 
 	:isNegative(false) {
@@ -92,8 +97,6 @@ class BigInt {
 
 
 
-BigInt operator+=(const BigInt& a, const BigInt& b);
-BigInt operator-=(const BigInt& a, const BigInt& b);
 BigInt operator/=(const BigInt& a, const BigInt& b);
 BigInt operator*=(const BigInt& a, const BigInt& b);
 
