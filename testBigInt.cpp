@@ -178,6 +178,7 @@ TEST_CASE("Unary operators" ,"[unary]"){
 		x = BigInt(2);
 		sout << -x;
 		REQUIRE(sout.str() == "-2");
+		REQUIRE(x == 2);
 	}
 	SECTION("- unary with constructor(string)"){
 		x = BigInt("100000000000000000");
@@ -289,16 +290,20 @@ TEST_CASE("Arithmetic Operations","[arithmetic]"){
 		SECTION("Case 2"){
 			a = BigInt(256);
 			b = BigInt(256);
-			c = BigInt(512);
-			sout << a + b;
-			REQUIRE(a + b == c);
+			a += 1 + 4 - 4;
+			REQUIRE(a + 256 == BigInt(513));
+			REQUIRE(a - b == BigInt(1));
+			REQUIRE(a - -1 == BigInt(258));
+			REQUIRE(-a - -a == 0);
+			a = 10;
+			REQUIRE(a + -a + -a + a == 0);
+			REQUIRE(-a - -a + -a - a - -1 == -19);
+			REQUIRE(a-- == 10);
 		}
 		SECTION("Case 3"){
 			a = BigInt(1);
-			b = BigInt("256");
-			c = BigInt(257);
-			sout << a + b;
-			REQUIRE(a + b == c);
+			b = BigInt("-5");
+			REQUIRE(--a - 5 - a-- == b);
 		}
 		SECTION("Case 4"){
 			a = BigInt(1);

@@ -8,8 +8,7 @@
 #include "BigInt.h"
 using namespace std;
 
-BigInt subtract(BigInt& a, BigInt& b,bool& isNegative);
-BigInt add(vector<int>& a, vector<int>& b,bool& isNegative);
+BigInt add(vector<int>& bigMax, vector<int>& bigMin,bool& isNegative);
 BigInt::BigInt(const string& s)
 	:isNegative(false) 
 	{
@@ -85,27 +84,26 @@ istream& operator>>(istream& inp, BigInt& x){
 
 //prefix
 BigInt& BigInt::operator++(){
-	 BigInt b = BigInt(1);	
-	 *this = *this + b;
+		
+	 *this = *this + 1;
 	 return *this;
  }
 BigInt& BigInt::operator--(){
-	 BigInt b = BigInt(1);	
-	 *this = *this - b;
+	
+	 *this = *this - 1;
 	 return *this;
  }
  const BigInt BigInt::operator++(int){
 	BigInt t = *this;
-	BigInt b = BigInt(1);
-	*this = *this + b;
+	
+	*this = *this + 1;
 	return t;
 	
 	
 }
  const  BigInt BigInt::operator--(int){
 	BigInt t = *this;
-	BigInt b = BigInt(1);
-	*this = *this - b;
+	*this = *this - 1;
 	return t;
 		
 		
@@ -138,9 +136,9 @@ BigInt operator-(const BigInt& num1,const BigInt& num2){
 	
 	
 }
-BigInt subtract(BigInt& a, BigInt& b,bool& isNegative){
+BigInt subtract(BigInt& a, BigInt& b,bool& isNegative) {
 	string res = "";
-	BigInt c;
+	BigInt c = BigInt();
 	int diffSize = a.size() - b.size();
 	for(int i = a.size() - 1,j = b.size() - 1; i >= diffSize;i--,j--){
 		if(a.digits[i] - b.digits[j] < 0){
@@ -191,7 +189,7 @@ BigInt operator+(const BigInt& num1, const BigInt& num2){
 	return add(bigMax,bigMin,isNegative);
 	
 }
-BigInt add(vector<int>& bigMax, vector<int>& bigMin,bool& isNegative){
+BigInt add(vector<int>& bigMax, vector<int>& bigMin,bool& isNegative) {
 	long long diffInSize = bigMax.size() -  bigMin.size();
 	string res = "";
 	int i = bigMax.size() - 1;
