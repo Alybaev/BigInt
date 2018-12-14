@@ -7,8 +7,8 @@
 #include <cmath>
 #include "BigInt.h"
 using namespace std;
-void fillWithZeros(vector<int>& vec,long long size);
-BigInt add(vector<int>& bigMax, vector<int>& bigMin,bool& isNegative);
+void fillWithZeros(vector<long long>& vec, long long size);
+BigInt add(vector<long long>& bigMax, vector<long long>& bigMin,bool& isNegative);
 BigInt::BigInt(const string& s)
 	:isNegative(false) 
 	{
@@ -109,6 +109,13 @@ BigInt& BigInt::operator--(){
 		
 		
 }
+BigInt operator*(const BigInt& num1,const BigInt& num2){
+	BigInt a = num1;
+	BigInt b = num2;
+	vector<long long> res(a.size() * b.size(), 0);
+	return a;
+	
+}
 BigInt operator-(const BigInt& num1,const BigInt& num2){
 	BigInt a = num1;
 	BigInt b = num2;
@@ -127,7 +134,7 @@ BigInt operator-(const BigInt& num1,const BigInt& num2){
 	
 	if(a < b){
 		isNegative = true;
-		vector<int> t;
+		vector<long long> t;
 		t = a.digits;
 		a.digits = b.digits;
 		b.digits = t;
@@ -174,8 +181,8 @@ BigInt operator+(const BigInt& num1, const BigInt& num2){
 	}else if(b.isNegative && a.isNegative){
 		isNegative = true;
 	}
-	vector<int> bigMax = a.digits;
-	vector<int> bigMin = b.digits;
+	vector<long long> bigMax = a.digits;
+	vector<long long> bigMin = b.digits;
 	
 	long long maxSize = max(a.size(),b.size());
 	long long minSize = min(a.size(),b.size());
@@ -190,7 +197,7 @@ BigInt operator+(const BigInt& num1, const BigInt& num2){
 	return add(bigMax,bigMin,isNegative);
 	
 }
-BigInt add(vector<int>& bigMax, vector<int>& bigMin,bool& isNegative) {
+BigInt add(vector<long long>& bigMax, vector<long long >& bigMin,bool& isNegative) {
 	long long diffInSize = bigMax.size() -  bigMin.size();
 	string res = "";
 	reverse(bigMax.begin(),bigMax.end());
@@ -220,7 +227,7 @@ BigInt add(vector<int>& bigMax, vector<int>& bigMin,bool& isNegative) {
 	
 	
 }
-void fillWithZeros(vector<int>& vec,long long size){
+void fillWithZeros(vector<long long>& vec,long long size){
 	while(vec.size() != size){
 		vec.push_back(0);
 	}
