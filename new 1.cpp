@@ -389,7 +389,13 @@ int main(){
 	string inp2; cin>>inp2;
 	BigInt a(inp);
 	BigInt b(inp2);
-	cout << a + b;
+	if(a > b){
+		cout << ">" << endl;
+	}else if(a < b){
+		cout << "<" << endl;
+	}else{
+		cout << "=" << endl;
+	}
 	
 	return 0;
 }

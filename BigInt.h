@@ -29,19 +29,20 @@ class BigInt {
 	friend BigInt operator/(const BigInt& a, const BigInt& b);
 	friend BigInt operator*(const BigInt& a, const BigInt& b);
 	
-	friend BigInt operator-(BigInt& a){
-		BigInt b = a;
-		b.isNegative = not a.isNegative;
-		return b;
-	}
-	
-	friend BigInt& operator+(BigInt& a) {
-		return a;
-	}
 	
 	
 	
 	public:
+	BigInt operator-() const {
+		BigInt t = *this;
+		t.isNegative = not t.isNegative;
+		return t;
+	}
+	
+	friend BigInt operator+(const BigInt& a) {
+		return a;
+	}
+	
 	BigInt& operator+=(const BigInt& b){
 		*this = *this + b;
 		return *this;
