@@ -271,7 +271,7 @@ TEST_CASE("postfix" ,"[postfix]"){
 	
 }
 
-TEST_CASE("Arithmetic Operations","[arithmetic]"){
+TEST_CASE("Arithmetic Operations +-","[arithmetic+-]"){
 	BigInt a,b,c;
 	ostringstream sout;
 	SECTION("Addition"){
@@ -514,7 +514,22 @@ TEST_CASE("Arithmetic Operations","[arithmetic]"){
 			REQUIRE(a == 1);
 		}
 	}
-	
-	
+		
 }
+TEST_CASE("Arithmetic Operations */","[arithmetic*/]"){
+	ostringstream sout;
+	SECTION("multiplication"){
+		SECTION("case 1")
+		{
+			BigInt c = BigInt("1234567891") * BigInt(1);
+			REQUIRE(c.size() == 2);
+			sout << c;
+			REQUIRE(sout.str() == "1987654321");
+			c = BigInt("123456789") * BigInt(1);
+			REQUIRE(c.size() == 1);
+			c = BigInt("12345678") * BigInt(1);
+			REQUIRE(c.size() == 1);
+		}
+	}
 
+}

@@ -29,6 +29,8 @@ class BigInt {
 	friend BigInt operator/(const BigInt& a, const BigInt& b);
 	friend BigInt operator*(const BigInt& a, const BigInt& b);
 	
+	friend void changeToNineDigits(BigInt& a);
+	
 	
 	
 	
@@ -80,13 +82,13 @@ class BigInt {
 		
 		
 	}
-	
-
-	private:
-		void eraseLeadingZeros();
 	long long size() const{
 		return digits.size();
 	}
+
+	private:
+		void eraseLeadingZeros();
+	
 	
 	bool isNegative;
 	std::vector<long long> digits;

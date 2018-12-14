@@ -7,6 +7,7 @@
 #include <cmath>
 #include "BigInt.h"
 using namespace std;
+
 void fillWithZeros(vector<long long>& vec, long long size);
 BigInt add(vector<long long>& bigMax, vector<long long>& bigMin,bool& isNegative);
 BigInt::BigInt(const string& s)
@@ -42,7 +43,7 @@ ostream& operator<<(ostream& out, const BigInt& x){
 	if (x.isNegative){
 		out << '-';
 	} 
-	for (int d: x.digits){
+	for (long long d: x.digits){
 		out << d;
 	}
 	return out;
@@ -113,7 +114,30 @@ BigInt operator*(const BigInt& num1,const BigInt& num2){
 	BigInt a = num1;
 	BigInt b = num2;
 	vector<long long> res(a.size() * b.size(), 0);
+
+	changeToNineDigits(a);
+	changeToNineDigits(b);
 	return a;
+	
+}
+void changeToNineDigits(BigInt& a){
+	ostringstream out;
+	
+	vector<long long> res;
+	for(int i = a.size() - 1,counter = 1;i >= 0;i--,counter++){
+		out << a.digits[i];
+		if(counter == 9 or i == 0){
+			istringstream inp(out.str());
+			long long t;
+			inp >> t;
+			res.push_back(t);
+			out.str("");
+			counter = 0;
+		}
+		
+	}
+	a.digits = res;
+	return;
 	
 }
 BigInt operator-(const BigInt& num1,const BigInt& num2){
