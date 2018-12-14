@@ -303,14 +303,17 @@ TEST_CASE("Arithmetic Operations","[arithmetic]"){
 		SECTION("Case 3"){
 			a = BigInt(1);
 			b = BigInt("-5");
-			REQUIRE(--a - 5 - a-- == b);
+			REQUIRE(++a + 5  == 7);
+			
 		}
 		SECTION("Case 4"){
 			a = BigInt(1);
 			b = BigInt("9");
 			c = BigInt(10);
+			
 			sout << a + b;
 			REQUIRE(a + b == c);
+			REQUIRE(++a + 5 + a++ == 9);
 		}
 		
 		SECTION("Case 5"){
@@ -416,13 +419,13 @@ TEST_CASE("Arithmetic Operations","[arithmetic]"){
 			c = BigInt(4);
 			sout << a - b;
 			REQUIRE(a - b == c);
+			REQUIRE(a - a == 0);
 		}
 		SECTION("Case 2"){
-			a = BigInt("12");
-			b = BigInt(3);
-			c = BigInt(9);
-			sout << a - b;
-			REQUIRE(a - b == c);
+			a = BigInt(1);
+			b = BigInt(5);
+			REQUIRE(5 - a-- - a-- == 4);
+			
 		}
 		SECTION("Case 3"){
 			a = BigInt("23");
@@ -432,11 +435,17 @@ TEST_CASE("Arithmetic Operations","[arithmetic]"){
 			REQUIRE(a - b == c);
 		}
 		SECTION("Case 4"){
-			a = BigInt("23");
-			b = BigInt(23);
-			c = BigInt(0);
-			sout << a - b;
-			REQUIRE(a - b == c);
+			a = BigInt(256);
+			b = BigInt(256);
+			a += 1 + 4 - 4;
+			REQUIRE(a + 256 == BigInt(513));
+			REQUIRE(a - b == BigInt(1));
+			REQUIRE(a - -1 == BigInt(258));
+			REQUIRE(-a - -a == 0);
+			a = 10;
+			REQUIRE(a + -a + -a + a == 0);
+			REQUIRE(-a - -a + -a - a - -1 == -19);
+			REQUIRE(a-- == 10);
 		}
 		SECTION("Case 5"){
 			a = BigInt("1000");
@@ -486,6 +495,23 @@ TEST_CASE("Arithmetic Operations","[arithmetic]"){
 			c = BigInt("-4003");
 			sout << a - b;
 			REQUIRE(a - b == c);
+		}
+		SECTION("Case 12"){
+			a = BigInt(1);
+			REQUIRE(--a - a-- == 0);
+			REQUIRE(a == -1);
+		}
+		SECTION("Case 13"){
+			b = -5;
+			a = BigInt(1);
+			REQUIRE(--a - 5 - a-- == b);
+			REQUIRE(a == -1);
+		}
+		SECTION("Case 14"){
+			b = -5;
+			a = BigInt(1);
+			REQUIRE(0 - 5 - 0 == b);
+			REQUIRE(a == 1);
 		}
 	}
 	

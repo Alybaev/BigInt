@@ -57,8 +57,8 @@ class BigInt {
 
 	explicit BigInt(const std::string& s);
 	
-	const  BigInt operator++(int);
-	const  BigInt operator--(int);
+	BigInt operator++(int);
+	BigInt operator--(int);
 	BigInt& operator++();
 	BigInt& operator--();
 	friend BigInt abs(BigInt x){

@@ -5,7 +5,98 @@
 #include <vector>
 #include <algorithm>
 #include <cmath>
-#include "BigInt.h"
+
+class BigInt {
+
+	
+	friend std::ostream& operator<<(std::ostream& out, const BigInt& x);
+	friend std::istream& operator>>(std::istream& out, BigInt& x);
+	friend bool operator==(const BigInt& a, const BigInt& b);
+	friend bool operator!=(const BigInt& a, const BigInt& b);
+	friend bool operator>(const BigInt& a, const BigInt& b);
+	friend bool operator<(const BigInt& a, const BigInt& b);
+	friend bool operator>=(const BigInt& a, const BigInt& b);
+	friend bool operator<=(const BigInt& a, const BigInt& b);
+
+	
+	
+	friend BigInt operator-=(const BigInt& a, const BigInt& b);
+	friend BigInt operator+(const BigInt& a,const BigInt& b);
+	friend BigInt operator-(const BigInt& a, const BigInt& b);
+	friend BigInt subtract(BigInt& a, BigInt& b,bool& isNegative);
+	friend BigInt add(std::vector<int>& a, std::vector<int>& b,bool& isNegative);
+	friend BigInt operator/(const BigInt& a, const BigInt& b);
+	friend BigInt operator*(const BigInt& a, const BigInt& b);
+	
+	friend BigInt operator-(BigInt& a){
+		BigInt b = a;
+		b.isNegative = not a.isNegative;
+		return b;
+	}
+	
+	friend BigInt& operator+(BigInt& a) {
+		return a;
+	}
+	
+	
+	
+	public:
+	BigInt& operator+=(const BigInt& b){
+		*this = *this + b;
+		return *this;
+	}
+	BigInt& operator-=(const BigInt& b){
+		*this = *this - b;
+		return *this;
+	}
+	BigInt()
+	:isNegative(false) {
+		digits.push_back(0);
+	}
+
+	explicit BigInt(const std::string& s);
+	
+	BigInt operator++(int);
+	BigInt operator--(int);
+	BigInt& operator++();
+	BigInt& operator--();
+	friend BigInt abs(BigInt x){
+		x.isNegative = false;
+		return x;
+	}
+   
+	BigInt(const int& x) 
+	:isNegative(false) {
+		std::string xStr = std::to_string(x);
+		if(xStr[0] == '-'){
+			isNegative = true;
+			xStr = xStr.substr(1,xStr.size());
+		}
+		for(char& c : xStr){
+			digits.push_back(c - '0');
+		}
+		
+		
+	}
+	
+
+	private:
+		void eraseLeadingZeros();
+	int size() const{
+		return digits.size();
+	}
+	
+	bool isNegative;
+	std::vector<int> digits;
+
+};
+
+#include <iostream>
+#include <stdexcept>
+#include <sstream>
+#include <vector>
+#include <algorithm>
+#include <cmath>
 using namespace std;
 void fillWithZeros(vector<int>& vec,long long size);
 BigInt add(vector<int>& bigMax, vector<int>& bigMin,bool& isNegative);
@@ -287,6 +378,21 @@ bool operator>=(const BigInt& a, const BigInt& b){
 
 
 
+
+
+
+
+
+
+int main(){
+	string inp; cin>>inp;
+	string inp2; cin>>inp2;
+	BigInt a(inp);
+	BigInt b(inp2);
+	cout << a + b;
+	
+	return 0;
+}
 
 
 
