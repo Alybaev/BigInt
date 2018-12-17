@@ -135,9 +135,9 @@ BigInt product(BigInt& a, BigInt& b){
 	product.digits.clear();
 	for(long long i =0;i < b.size();i++){
 		long long carry = 0;
-		long long insertZeros = 9 * i;
+		long long insertZeros = 2 * i;
 		if(i >= 2){
-			insertZeros = 9 * (i - 1)+ to_string(b.digits[0]).length();
+			insertZeros = 2 * (i - 1)+ to_string(b.digits[0]).length();
 		}
 		if(i == 1){
 			insertZeros = to_string(b.digits[i - 1]).length();
@@ -146,7 +146,7 @@ BigInt product(BigInt& a, BigInt& b){
 		
 		for(long long j = 0;j < a.size();j++){
 			
-			long long rank = 1000000000;
+			long long rank = 100;
 			if(j == 0){
 				rank = to_string(a.digits[j]).length() * 10;
 			}
@@ -185,7 +185,7 @@ void convertToNineDigitsPerElement(BigInt& a){
 	vector<long long> res;
 	for(long long i = 0,counter = 1;i < a.size();i++,counter++){
 		out << a.digits[i];
-		if(counter == 9 or i == a.size() - 1){
+		if(counter == 2 or i == a.size() - 1){
 			istringstream inp(out.str());
 			long long t;
 			inp >> t;
