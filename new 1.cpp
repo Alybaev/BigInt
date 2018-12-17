@@ -1,10 +1,11 @@
+#ifndef BIGINT_H
+#define BIGINT_H
 
-#include <iostream>
-#include <stdexcept>
-#include <sstream>
+#include <cstdint>
+#include <iosfwd>
 #include <vector>
-#include <algorithm>
-#include <cmath>
+#include <string>
+
 
 class BigInt {
 
@@ -24,23 +25,27 @@ class BigInt {
 	friend BigInt operator+(const BigInt& a,const BigInt& b);
 	friend BigInt operator-(const BigInt& a, const BigInt& b);
 	friend BigInt subtract(BigInt& a, BigInt& b,bool& isNegative);
-	friend BigInt add(std::vector<int>& a, std::vector<int>& b,bool& isNegative);
+	friend BigInt add(std::vector<long long>& a, std::vector<long long>& b,bool& isNegative);
 	friend BigInt operator/(const BigInt& a, const BigInt& b);
 	friend BigInt operator*(const BigInt& a, const BigInt& b);
+	friend BigInt product(BigInt& a, BigInt& b);
 	
-	friend BigInt operator-(BigInt& a){
-		BigInt b = a;
-		b.isNegative = not a.isNegative;
-		return b;
-	}
-	
-	friend BigInt& operator+(BigInt& a) {
-		return a;
-	}
+	friend void convertToNineDigitsPerElement(BigInt& a);
+	friend void convertToOneDigitPerElement(BigInt& a);
 	
 	
 	
 	public:
+	BigInt operator-() const {
+		BigInt t = *this;
+		t.isNegative = not t.isNegative;
+		return t;
+	}
+	
+	friend BigInt operator+(const BigInt& a) {
+		return a;
+	}
+	
 	BigInt& operator+=(const BigInt& b){
 		*this = *this + b;
 		return *this;
@@ -78,18 +83,24 @@ class BigInt {
 		
 		
 	}
-	
+	long long size() const{
+		return digits.size();
+	}
 
 	private:
 		void eraseLeadingZeros();
-	int size() const{
-		return digits.size();
-	}
+	
 	
 	bool isNegative;
-	std::vector<int> digits;
+	std::vector<long long> digits;
 
 };
+
+
+BigInt operator/=(const BigInt& a, const BigInt& b);
+BigInt operator*=(const BigInt& a, const BigInt& b);
+
+#endif
 
 #include <iostream>
 #include <stdexcept>
@@ -97,9 +108,11 @@ class BigInt {
 #include <vector>
 #include <algorithm>
 #include <cmath>
+
 using namespace std;
-void fillWithZeros(vector<int>& vec,long long size);
-BigInt add(vector<int>& bigMax, vector<int>& bigMin,bool& isNegative);
+
+void fillWithZeros(vector<long long>& vec, long long size);
+BigInt add(vector<long long>& bigMax, vector<long long>& bigMin,bool& isNegative);
 BigInt::BigInt(const string& s)
 	:isNegative(false) 
 	{
@@ -133,7 +146,7 @@ ostream& operator<<(ostream& out, const BigInt& x){
 	if (x.isNegative){
 		out << '-';
 	} 
-	for (int d: x.digits){
+	for (long long d: x.digits){
 		out << d;
 	}
 	return out;
@@ -200,6 +213,96 @@ BigInt& BigInt::operator--(){
 		
 		
 }
+BigInt operator*(const BigInt& num1,const BigInt& num2){
+	BigInt a,b;
+	a = num1;
+	b = num2;
+	if(num2 > num1){
+		b = num1;
+		a = num2;
+	}
+
+	convertToNineDigitsPerElement(a);
+	convertToNineDigitsPerElement(b);
+
+	
+	return product(a,b);
+	
+}
+BigInt product(BigInt& a, BigInt& b){
+	
+	BigInt res = BigInt();
+	
+	reverse(a.digits.begin(),a.digits.end());
+	reverse(b.digits.begin(),b.digits.end());
+	BigInt product = BigInt();
+	product.digits.clear();
+	for(long long i =0;i < b.size();i++){
+		long long carry = 0;
+		long long insertZeros = 9 * i;
+		if(i >= 2){
+			insertZeros = 9 * (i - 1)+ to_string(b.digits[0]).length();
+		}
+		if(i == 1){
+			insertZeros = to_string(b.digits[i - 1]).length();
+		}
+		
+		
+		for(long long j = 0;j < a.size();j++){
+			
+			long long rank = 1000000000;
+			if(j == 0){
+				rank = to_string(a.digits[j]).length() * 10;
+			}
+			if(j == a.size() - 1){
+				product.digits.push_back(a.digits[j] * b.digits[i] + carry);
+			}else{
+				product.digits.push_back((a.digits[j] *  b.digits[i] + carry)% rank);
+			}
+			
+			carry = a.digits[j] *  b.digits[i] / rank;
+			
+			
+		}
+		convertToOneDigitPerElement(product);
+		for(long long k = 0;k < insertZeros;k++){
+			product.digits.push_back(0);
+		}
+		res = res + product;
+		product.digits.clear();
+		
+	
+	}
+	return res;
+}
+void convertToOneDigitPerElement(BigInt& a){
+	ostringstream oss;
+	for(long long i =  a.size() - 1; i >= 0;i--){
+	    oss << a.digits[i];
+	}
+	a = BigInt(oss.str());
+	
+}
+void convertToNineDigitsPerElement(BigInt& a){
+	ostringstream out;
+	
+	vector<long long> res;
+	for(int i = 0,counter = 1;i < a.size();i++,counter++){
+		out << a.digits[i];
+		if(counter == 9 or i == a.size() - 1){
+			istringstream inp(out.str());
+			long long t;
+			inp >> t;
+			res.push_back(t);
+			out.str("");
+			counter = 0;
+		}
+		
+	}
+	a.digits = res;
+	return;
+	
+}
 BigInt operator-(const BigInt& num1,const BigInt& num2){
 	BigInt a = num1;
 	BigInt b = num2;
@@ -218,7 +321,7 @@ BigInt operator-(const BigInt& num1,const BigInt& num2){
 	
 	if(a < b){
 		isNegative = true;
-		vector<int> t;
+		vector<long long> t;
 		t = a.digits;
 		a.digits = b.digits;
 		b.digits = t;
@@ -265,8 +368,8 @@ BigInt operator+(const BigInt& num1, const BigInt& num2){
 	}else if(b.isNegative && a.isNegative){
 		isNegative = true;
 	}
-	vector<int> bigMax = a.digits;
-	vector<int> bigMin = b.digits;
+	vector<long long> bigMax = a.digits;
+	vector<long long> bigMin = b.digits;
 	
 	long long maxSize = max(a.size(),b.size());
 	long long minSize = min(a.size(),b.size());
@@ -281,7 +384,7 @@ BigInt operator+(const BigInt& num1, const BigInt& num2){
 	return add(bigMax,bigMin,isNegative);
 	
 }
-BigInt add(vector<int>& bigMax, vector<int>& bigMin,bool& isNegative) {
+BigInt add(vector<long long>& bigMax, vector<long long >& bigMin,bool& isNegative) {
 	long long diffInSize = bigMax.size() -  bigMin.size();
 	string res = "";
 	reverse(bigMax.begin(),bigMax.end());
@@ -311,7 +414,7 @@ BigInt add(vector<int>& bigMax, vector<int>& bigMin,bool& isNegative) {
 	
 	
 }
-void fillWithZeros(vector<int>& vec,long long size){
+void fillWithZeros(vector<long long>& vec,long long size){
 	while(vec.size() != size){
 		vec.push_back(0);
 	}
@@ -380,22 +483,13 @@ bool operator>=(const BigInt& a, const BigInt& b){
 
 
 
-
-
-
-
 int main(){
 	string inp; cin>>inp;
 	string inp2; cin>>inp2;
 	BigInt a(inp);
 	BigInt b(inp2);
-	if(a > b){
-		cout << ">" << endl;
-	}else if(a < b){
-		cout << "<" << endl;
-	}else{
-		cout << "=" << endl;
-	}
+	BigInt c = a * b;
+	cout << c << endl;
 	
 	return 0;
 }

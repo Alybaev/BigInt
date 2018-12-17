@@ -28,9 +28,10 @@ class BigInt {
 	friend BigInt add(std::vector<long long>& a, std::vector<long long>& b,bool& isNegative);
 	friend BigInt operator/(const BigInt& a, const BigInt& b);
 	friend BigInt operator*(const BigInt& a, const BigInt& b);
+	friend BigInt product(BigInt& a, BigInt& b);
 	
-	friend void changeToNineDigits(BigInt& a);
-	
+	friend void convertToNineDigitsPerElement(BigInt& a);
+	friend void convertToOneDigitPerElement(BigInt& a);
 	
 	
 	

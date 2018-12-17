@@ -111,22 +111,81 @@ BigInt& BigInt::operator--(){
 		
 }
 BigInt operator*(const BigInt& num1,const BigInt& num2){
-	BigInt a = num1;
-	BigInt b = num2;
-	vector<long long> res(a.size() * b.size(), 0);
+	BigInt a,b;
+	a = num1;
+	b = num2;
+	if(num2 > num1){
+		b = num1;
+		a = num2;
+	}
 
-	changeToNineDigits(a);
-	changeToNineDigits(b);
-	return a;
+	convertToNineDigitsPerElement(a);
+	convertToNineDigitsPerElement(b);
+
+	
+	return product(a,b);
 	
 }
-void changeToNineDigits(BigInt& a){
+BigInt product(BigInt& a, BigInt& b){
+	BigInt res = BigInt();
+	
+	reverse(a.digits.begin(),a.digits.end());
+	reverse(b.digits.begin(),b.digits.end());
+	BigInt product = BigInt();
+	product.digits.clear();
+	for(long long i =0;i < b.size();i++){
+		long long carry = 0;
+		long long insertZeros = 9 * i;
+		if(i >= 2){
+			insertZeros = 9 * (i - 1)+ to_string(b.digits[0]).length();
+		}
+		if(i == 1){
+			insertZeros = to_string(b.digits[i - 1]).length();
+		}
+		
+		
+		for(long long j = 0;j < a.size();j++){
+			
+			long long rank = 1000000000;
+			if(j == 0){
+				rank = to_string(a.digits[j]).length() * 10;
+			}
+			if(j == a.size() - 1){
+				product.digits.push_back(a.digits[j] * b.digits[i] + carry);
+			}else{
+				product.digits.push_back((a.digits[j] *  b.digits[i] + carry)% rank);
+			}
+			
+			carry = a.digits[j] *  b.digits[i] / rank;
+			
+			
+		}
+		convertToOneDigitPerElement(product);
+		for(long long k = 0;k < insertZeros;k++){
+			product.digits.push_back(0);
+		}
+		res = res + product;
+		product.digits.clear();
+		
+	
+	}
+	return res;
+}
+void convertToOneDigitPerElement(BigInt& a){
+	ostringstream oss;
+	for(long long i =  a.size() - 1; i >= 0;i--){
+	    oss << a.digits[i];
+	}
+	a = BigInt(oss.str());
+	
+}
+void convertToNineDigitsPerElement(BigInt& a){
 	ostringstream out;
 	
 	vector<long long> res;
-	for(int i = a.size() - 1,counter = 1;i >= 0;i--,counter++){
+	for(long long i = 0,counter = 1;i < a.size();i++,counter++){
 		out << a.digits[i];
-		if(counter == 9 or i == 0){
+		if(counter == 9 or i == a.size() - 1){
 			istringstream inp(out.str());
 			long long t;
 			inp >> t;
