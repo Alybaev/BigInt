@@ -6,7 +6,7 @@
 #include <stdexcept>
 #include <string>
 #include "BigInt.h"
-
+#include <cstdlib>
 using namespace std;
 
 TEST_CASE ("Check constructors", "[ctor]") {
@@ -518,17 +518,23 @@ TEST_CASE("Arithmetic Operations +-","[arithmetic+-]"){
 }
 TEST_CASE("Arithmetic Operations */","[arithmetic*/]"){
 	ostringstream sout;
+	BigInt a;
+	BigInt b;
 	SECTION("multiplication"){
 		SECTION("case 1")
 		{
-			BigInt c = BigInt("1234567891") * BigInt(1);
-			REQUIRE(c.size() == 2);
-			sout << c;
-			REQUIRE(sout.str() == "1123456789");
-			c = BigInt("123456789") * BigInt(1);
-			REQUIRE(c.size() == 1);
-			c = BigInt("12345678") * BigInt(1);
-			REQUIRE(c.size() == 1);
+			srand(time(0));
+			for(long long i = 0;i < 10000;i++){
+				long long e = rand();
+				a = BigInt(e);
+				b = BigInt(i);
+				sout << a * b;
+				REQUIRE(sout.str() == to_string(i * e));
+				sout.str("");
+			}
+			REQUIRE(-BigInt(2) * BigInt(3) == -6);
+			REQUIRE(-BigInt(13) * -BigInt(20) == 260);
+			REQUIRE(BigInt(1) * -BigInt(5) == -5);
 		}
 	}
 

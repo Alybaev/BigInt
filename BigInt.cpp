@@ -1,4 +1,3 @@
-
 #include <iostream>
 #include <stdexcept>
 #include <sstream>
@@ -118,15 +117,25 @@ BigInt operator*(const BigInt& num1,const BigInt& num2){
 		b = num1;
 		a = num2;
 	}
-
-	convertToNineDigitsPerElement(a);
-	convertToNineDigitsPerElement(b);
+	
+	long long digitsPerElem = 9;
+	long long lastElementA = a.size() % digitsPerElem;
+	long long lastElementB = b.size() % digitsPerElem;
+	if(lastElementA == 0){
+		lastElementA = digitsPerElem;
+	}
+	if(lastElementB == 0){
+		lastElementB = digitsPerElem;
+	}
+	convertToNineDigitsPerElement(a,digitsPerElem);
+	convertToNineDigitsPerElement(b,digitsPerElem);
 
 	
-	return product(a,b);
+	return product(a,b,digitsPerElem,lastElementA,lastElementB);
 	
 }
-BigInt product(BigInt& a, BigInt& b){
+BigInt product(BigInt& a, BigInt& b,long long& digitsPerElem,long long& lastElementA,long long& lastElementB){
+	
 	BigInt res = BigInt();
 	
 	reverse(a.digits.begin(),a.digits.end());
@@ -135,28 +144,47 @@ BigInt product(BigInt& a, BigInt& b){
 	product.digits.clear();
 	for(long long i =0;i < b.size();i++){
 		long long carry = 0;
-		long long insertZeros = 2 * i;
+		long long insertZeros = digitsPerElem * i;
 		if(i >= 2){
-			insertZeros = 2 * (i - 1)+ to_string(b.digits[0]).length();
+			insertZeros = digitsPerElem * (i - 1)+ lastElementB;
 		}
 		if(i == 1){
-			insertZeros = to_string(b.digits[i - 1]).length();
+			insertZeros = lastElementB;
 		}
 		
 		
 		for(long long j = 0;j < a.size();j++){
 			
-			long long rank = 100;
+			long long rank;
+			
+			string rankStr = "1" + string(digitsPerElem, '0');
+			
+				
 			if(j == 0){
-				rank = to_string(a.digits[j]).length() * 10;
+				rankStr = "1" + string(lastElementA, '0');
+				
 			}
+			istringstream parseLong(rankStr);
+			parseLong >> rank;
+		
 			if(j == a.size() - 1){
 				product.digits.push_back(a.digits[j] * b.digits[i] + carry);
 			}else{
-				product.digits.push_back((a.digits[j] *  b.digits[i] + carry)% rank);
+				long long remainder = (a.digits[j] *  b.digits[i] + carry)% rank;
+				product.digits.push_back(remainder);
+				
+				if(remainder == 0){
+					remainder = 1;
+				}
+				while(remainder % (rank / 10) == remainder){
+					product.digits.push_back(0);
+					remainder *= 10;
+				}
+				
+				
 			}
-			
-			carry = a.digits[j] *  b.digits[i] / rank;
+		
+			carry = (a.digits[j] *  b.digits[i] + carry)/rank;
 			
 			
 		}
@@ -169,6 +197,7 @@ BigInt product(BigInt& a, BigInt& b){
 		
 	
 	}
+	res.isNegative = a.isNegative != b.isNegative;
 	return res;
 }
 void convertToOneDigitPerElement(BigInt& a){
@@ -179,13 +208,13 @@ void convertToOneDigitPerElement(BigInt& a){
 	a = BigInt(oss.str());
 	
 }
-void convertToNineDigitsPerElement(BigInt& a){
+void convertToNineDigitsPerElement(BigInt& a,long long& digitsInOneEl){
 	ostringstream out;
 	
 	vector<long long> res;
-	for(long long i = 0,counter = 1;i < a.size();i++,counter++){
+	for(int i = 0,counter = 1;i < a.size();i++,counter++){
 		out << a.digits[i];
-		if(counter == 2 or i == a.size() - 1){
+		if(counter == digitsInOneEl or i == a.size() - 1){
 			istringstream inp(out.str());
 			long long t;
 			inp >> t;
@@ -374,9 +403,4 @@ bool operator<(const BigInt& a, const BigInt& b){
 bool operator>=(const BigInt& a, const BigInt& b){
 	return not(a < b);
 }
-
-
-
-
-
 

@@ -5,7 +5,7 @@
 #include <iosfwd>
 #include <vector>
 #include <string>
-
+#include <stdlib.h> 
 
 class BigInt {
 
@@ -20,17 +20,17 @@ class BigInt {
 	friend bool operator<=(const BigInt& a, const BigInt& b);
 
 	
-	
+	friend BigInt operator*(const BigInt& num1,const BigInt& num2);
 	friend BigInt operator-=(const BigInt& a, const BigInt& b);
 	friend BigInt operator+(const BigInt& a,const BigInt& b);
 	friend BigInt operator-(const BigInt& a, const BigInt& b);
 	friend BigInt subtract(BigInt& a, BigInt& b,bool& isNegative);
 	friend BigInt add(std::vector<long long>& a, std::vector<long long>& b,bool& isNegative);
 	friend BigInt operator/(const BigInt& a, const BigInt& b);
-	friend BigInt operator*(const BigInt& a, const BigInt& b);
-	friend BigInt product(BigInt& a, BigInt& b);
+	friend BigInt product(BigInt& a, BigInt& b,long long& digitsPerElem,long long& lastElementA,long long& lastElementB);
+	friend BigInt product(BigInt& a, BigInt& b,long long& digitsPerElem);
 	
-	friend void convertToNineDigitsPerElement(BigInt& a);
+	friend void convertToNineDigitsPerElement(BigInt& a,long long& digitsInOneEl);
 	friend void convertToOneDigitPerElement(BigInt& a);
 	
 	
@@ -95,15 +95,6 @@ class BigInt {
 	std::vector<long long> digits;
 
 };
-
-
-
-
-
-
-
-
-
 
 
 BigInt operator/=(const BigInt& a, const BigInt& b);
