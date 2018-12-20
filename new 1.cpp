@@ -36,13 +36,13 @@ class BigInt {
 	
 	
 	public:
-	BigInt operator-() const {
-		BigInt t = *this;
-		t.isNegative = not t.isNegative;
+	friend BigInt operator-(const BigInt& a)   {
+		BigInt t = a;
+		t.isNegative = not a.isNegative;
 		return t;
 	}
 	
-	friend BigInt operator+(const BigInt& a) {
+	BigInt operator+(const BigInt& a) {
 		return a;
 	}
 	
@@ -222,7 +222,7 @@ BigInt operator*(const BigInt& num1,const BigInt& num2){
 		a = num2;
 	}
 	
-	long long digitsPerElem = 9;
+	long long digitsPerElem = 2;
 	long long lastElementA = a.size() % digitsPerElem;
 	long long lastElementB = b.size() % digitsPerElem;
 	if(lastElementA == 0){
@@ -517,20 +517,13 @@ bool operator>=(const BigInt& a, const BigInt& b){
 
 int main(){
 
-	int n;
-	cin>>n;
-	BigInt a(2);
-	if(n == 0){
-		cout << 1 << endl;
-	}else{
-		for(int i = 1; i < n;i++){
-			
-			a = a * 2;
-			
+	BigInt x;
+		ostringstream sout;
+	
 		
-		}
-		cout << a << endl;
-	}
+		cin >> x;
+		cout << x;
+
 	
 		
 	

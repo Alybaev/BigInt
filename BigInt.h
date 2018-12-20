@@ -54,6 +54,10 @@ class BigInt {
 		*this = *this - b;
 		return *this;
 	}
+	BigInt& operator*=(const BigInt& b){
+		*this = *this * b;
+		return *this;
+	}
 	BigInt()
 	:isNegative(false) {
 		digits.push_back(0);

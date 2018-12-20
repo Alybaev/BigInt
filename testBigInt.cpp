@@ -496,18 +496,8 @@ TEST_CASE("Arithmetic Operations +-","[arithmetic+-]"){
 			sout << a - b;
 			REQUIRE(a - b == c);
 		}
-	/*	SECTION("Case 12"){
-			a = BigInt(1);
-			REQUIRE(--a - a-- == 0);
-			REQUIRE(a == -1);
-		}
-		SECTION("Case 13"){
-			b = -5;
-			a = BigInt(1);
-			REQUIRE(--a - 5 - a-- == b);
-			REQUIRE(a == -1);
-		} */
-		SECTION("Case 14"){
+	
+		SECTION("Case 12"){
 			b = -5;
 			a = BigInt(1);
 			REQUIRE(0 - 5 - 0 == b);
@@ -535,6 +525,13 @@ TEST_CASE("Arithmetic Operations */","[arithmetic*/]"){
 			REQUIRE(-BigInt(2) * BigInt(3) == -6);
 			REQUIRE(-BigInt(13) * -BigInt(20) == 260);
 			REQUIRE(BigInt(1) * -BigInt(5) == -5);
+		}
+		SECTION("case 2")
+		{
+			
+			BigInt a = 4;
+			a *= 2 - 4;
+			REQUIRE(a == -8);
 		}
 	}
 

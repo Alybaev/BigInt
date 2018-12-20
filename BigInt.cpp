@@ -118,7 +118,7 @@ BigInt operator*(const BigInt& num1,const BigInt& num2){
 		a = num2;
 	}
 	
-	long long digitsPerElem = 9;
+	long long digitsPerElem = 3;
 	long long lastElementA = a.size() % digitsPerElem;
 	long long lastElementB = b.size() % digitsPerElem;
 	if(lastElementA == 0){
