@@ -101,7 +101,6 @@ BigInt operator/=(const BigInt& a, const BigInt& b);
 BigInt operator*=(const BigInt& a, const BigInt& b);
 
 #endif
-
 #include <iostream>
 #include <stdexcept>
 #include <sstream>
@@ -122,6 +121,10 @@ BigInt::BigInt(const string& s)
 	sinp >> ch;
 	
 	if (ch == '-' or ch == '+'){
+		if(sinp.eof())
+		{
+			throw runtime_error("BigInt: incorrect string initializer");
+		}
 		isNegative = ch == '-';
 	} else if (isdigit(ch)) {
 		digits.push_back(ch - '0');
@@ -161,29 +164,11 @@ void BigInt::eraseLeadingZeros(){
 }
 
 istream& operator>>(istream& inp, BigInt& x){
-	char ch;
-	string digits;
-	bool isNegativeT;
-	if (inp >> ch){
-		if (ch == '-'){
-			isNegativeT = true;
-			
-		}else{
-			inp.unget();
-		}
-	} 
-	
-	while (inp.get(ch)){
-		if(!isdigit(ch)){
-			inp.setstate(ios_base::failbit);
-			return inp;
-		}
-		digits += ch;
-	}
-	x = BigInt(digits);
-	x.isNegative = isNegativeT;
+	string tmp;
+    inp >> tmp;
+    x = BigInt(tmp);
+    return inp;
 
-	return inp;
 }
 
 //prefix
@@ -222,7 +207,7 @@ BigInt operator*(const BigInt& num1,const BigInt& num2){
 		a = num2;
 	}
 	
-	long long digitsPerElem = 2;
+	long long digitsPerElem = 3;
 	long long lastElementA = a.size() % digitsPerElem;
 	long long lastElementB = b.size() % digitsPerElem;
 	if(lastElementA == 0){
@@ -513,18 +498,12 @@ bool operator>=(const BigInt& a, const BigInt& b){
 
 
 
-
-
 int main(){
 
 	BigInt x;
-		ostringstream sout;
-	
-		
-		cin >> x;
-		cout << x;
-
-	
+	BigInt x1;
+	BigInt c = x + x1;
+	cout << c;
 		
 	
 	

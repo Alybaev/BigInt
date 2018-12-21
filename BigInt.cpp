@@ -18,6 +18,10 @@ BigInt::BigInt(const string& s)
 	sinp >> ch;
 	
 	if (ch == '-' or ch == '+'){
+		if(sinp.eof())
+		{
+			throw runtime_error("BigInt: incorrect string initializer");
+		}
 		isNegative = ch == '-';
 	} else if (isdigit(ch)) {
 		digits.push_back(ch - '0');
@@ -32,6 +36,7 @@ BigInt::BigInt(const string& s)
 		}
 		digits.push_back(ch - '0');
 	}
+	
 	if(digits.size() > 1){
 		eraseLeadingZeros();
 	}
@@ -57,29 +62,10 @@ void BigInt::eraseLeadingZeros(){
 }
 
 istream& operator>>(istream& inp, BigInt& x){
-	char ch;
-	string digits;
-	bool isNegativeT;
-	if (inp >> ch){
-		if (ch == '-'){
-			isNegativeT = true;
-			
-		}else{
-			inp.unget();
-		}
-	} 
-	
-	while (inp.get(ch)){
-		if(!isdigit(ch)){
-			inp.setstate(ios_base::failbit);
-			return inp;
-		}
-		digits += ch;
-	}
-	x = BigInt(digits);
-	x.isNegative = isNegativeT;
-
-	return inp;
+	string tmp;
+    inp >> tmp;
+    x = BigInt(tmp);
+    return inp;
 }
 
 //prefix
@@ -198,6 +184,9 @@ BigInt product(BigInt& a, BigInt& b,long long& digitsPerElem,long long& lastElem
 	
 	}
 	res.isNegative = a.isNegative != b.isNegative;
+	if(res == -BigInt(0)){
+		res.isNegative = false;
+	}
 	return res;
 }
 void convertToOneDigitPerElement(BigInt& a){

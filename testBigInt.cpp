@@ -532,6 +532,7 @@ TEST_CASE("Arithmetic Operations */","[arithmetic*/]"){
 			BigInt a = 4;
 			a *= 2 - 4;
 			REQUIRE(a == -8);
+			REQUIRE(BigInt(0) * BigInt(-1) == 0);
 		}
 	}
 
